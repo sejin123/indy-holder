@@ -3,8 +3,6 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-
-        maven { url "https://repo.sovrin.org/repository/maven-public" }
     }
 }
 dependencyResolutionManagement {
@@ -12,6 +10,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven {
+            url "https://repo.sovrin.org/repository/maven-public"
+        }
     }
 }
 rootProject.name = "SSIHolder"
