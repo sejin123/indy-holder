@@ -19,5 +19,17 @@ class MainActivity : AppCompatActivity() {
         // 2. manifest 등에서 설정할 수 있는지 여부 확인
         Os.setenv("EXTERNAL_STORAGE", getExternalFilesDir(null)?.absolutePath, true)
         System.loadLibrary("indy")
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
