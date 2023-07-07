@@ -38,9 +38,11 @@ android {
 }
 
 dependencies {
-//    implementation 'net.java.dev.jna:jna:5.7.0@aar'       //TODO: 아래 indy 1.16.0과 duplicate 나는데 해당 라이브러리가 뭔지 정확히 파악이 필요함
-    implementation 'org.hyperledger:indy:1.16.0'
-    implementation 'com.google.code.gson:gson:2.9.0'
+//    implementation 'net.java.dev.jna:jna:5.7.0@aar'                   //TODO: 아래 indy 1.16.0과 duplicate 나는데 해당 라이브러리가 뭔지 정확히 파악이 필요함
+    implementation 'org.hyperledger:indy:1.16.0'                        //indy wrapper library
+    implementation 'com.google.code.gson:gson:2.9.0'                    //JSON parser
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'              //HTTP network library
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
