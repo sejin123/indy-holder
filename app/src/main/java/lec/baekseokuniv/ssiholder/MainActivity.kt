@@ -1,10 +1,12 @@
 package lec.baekseokuniv.ssiholder
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.system.Os
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import lec.baekseokuniv.ssiholder.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binder: ActivityMainBinding
@@ -20,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         Os.setenv("EXTERNAL_STORAGE", getExternalFilesDir(null)?.absolutePath, true)
         System.loadLibrary("indy")
 
+        supportFragmentManager
+            .beginTransaction()
+            .add(binder.container.id, MainFragment.newInstance())
+            .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

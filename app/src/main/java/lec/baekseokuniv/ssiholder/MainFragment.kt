@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import lec.baekseokuniv.ssiholder.credentiallist.CredentialListFragment
 import lec.baekseokuniv.ssiholder.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -19,10 +20,19 @@ class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binder = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         "Hello, SSI Holder!".also { binder.txtWelcoming.text = it }
 
+        binder.btnIssuing.setOnClickListener { }
+        binder.btnVerifying.setOnClickListener { }
+        binder.btnNavigateToCredentialList.setOnClickListener {
+            val credentialListFragment = CredentialListFragment.newInstance()
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, credentialListFragment, credentialListFragment.tag)
+                .commit()
+        }
         return binder.root
     }
 }
