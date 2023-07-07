@@ -9,17 +9,17 @@ import androidx.databinding.DataBindingUtil
 import lec.baekseokuniv.ssiholder.R
 import lec.baekseokuniv.ssiholder.databinding.FragmentIssueBinding
 
-private const val ARG_ISSUING_DATA = "argument_issuing_data"
+private const val ARG_ISSUABLE_DATA = "argument_issuable_data"
 
 class IssueFragment : Fragment() {
     private lateinit var binder: FragmentIssueBinding
-    private var issuingData: String? = null
+    private var issuableData: String? = null
 
     companion object {
-        fun newInstance(issuingData: String? = null) =
+        fun newInstance(issuableData: String? = null) =
             IssueFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_ISSUING_DATA, issuingData)
+                    putString(ARG_ISSUABLE_DATA, issuableData)
                 }
             }
     }
@@ -27,7 +27,7 @@ class IssueFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            issuingData = it.getString(ARG_ISSUING_DATA)
+            issuableData = it.getString(ARG_ISSUABLE_DATA)
         }
     }
 

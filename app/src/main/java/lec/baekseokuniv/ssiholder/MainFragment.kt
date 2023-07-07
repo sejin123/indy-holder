@@ -5,9 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.trace
 import androidx.databinding.DataBindingUtil
 import lec.baekseokuniv.ssiholder.credentiallist.CredentialListFragment
 import lec.baekseokuniv.ssiholder.databinding.FragmentMainBinding
+import lec.baekseokuniv.ssiholder.issue.IssueFragment
+import lec.baekseokuniv.ssiholder.verification.VerificationFragment
 
 class MainFragment : Fragment() {
     private lateinit var binder: FragmentMainBinding
@@ -24,14 +27,15 @@ class MainFragment : Fragment() {
         binder = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         "Hello, SSI Holder!".also { binder.txtWelcoming.text = it }
 
-        binder.btnIssuing.setOnClickListener { }
-        binder.btnVerifying.setOnClickListener { }
+        val mainActivity: MainActivity = requireActivity() as MainActivity
+        binder.btnNavigateToIssue.setOnClickListener {
+            mainActivity.navigateToFragment(IssueFragment.newInstance())
+        }
+        binder.btnNavigateToVerification.setOnClickListener {
+            mainActivity.navigateToFragment(VerificationFragment.newInstance())
+        }
         binder.btnNavigateToCredentialList.setOnClickListener {
-            val credentialListFragment = CredentialListFragment.newInstance()
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, credentialListFragment, credentialListFragment.tag)
-                .commit()
+            mainActivity.navigateToFragment(CredentialListFragment.newInstance())
         }
         return binder.root
     }

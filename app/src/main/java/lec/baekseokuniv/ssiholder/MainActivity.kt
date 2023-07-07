@@ -5,7 +5,11 @@ import android.system.Os
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import lec.baekseokuniv.ssiholder.credentiallist.CredentialListFragment
 import lec.baekseokuniv.ssiholder.databinding.ActivityMainBinding
+import lec.baekseokuniv.ssiholder.issue.IssueFragment
+import lec.baekseokuniv.ssiholder.verification.VerificationFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binder = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        setSupportActionBar(binder.appBar)
 
         //TODO
         // 1. type = null 인데, 이 부분 확인
@@ -26,7 +29,16 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .add(binder.container.id, MainFragment.newInstance())
             .commit()
+
+        setSupportActionBar(binder.appBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun navigateToFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(binder.container.id, fragment)
+            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

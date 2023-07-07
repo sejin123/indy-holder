@@ -22,22 +22,22 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#009000"
             android:text="@string/credential_list"
-            app:layout_constraintBottom_toTopOf="@id/btn_issuing"
+            app:layout_constraintBottom_toTopOf="@id/btn_navigate_to_issue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/btn_issuing"
+            android:id="@+id/btn_navigate_to_issue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="#009000"
             android:text="@string/txt_issuing"
-            app:layout_constraintBottom_toTopOf="@id/btn_verifying"
+            app:layout_constraintBottom_toTopOf="@id/btn_navigate_to_verification"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/btn_verifying"
+            android:id="@+id/btn_navigate_to_verification"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="#009000"

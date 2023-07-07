@@ -17,7 +17,7 @@ class VerificationFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(vc: String) =
+        fun newInstance(vc: String? = null) =
             VerificationFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_VERIFIABLE_CREDENTIAL, vc)
