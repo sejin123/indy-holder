@@ -8,11 +8,11 @@ import lec.baekseokuniv.ssiholder.config.WalletConfig
 import org.hyperledger.indy.sdk.wallet.Wallet
 
 class App : Application() {
-    private val PREFERENCE_FILE_DID = "PREFERENCE_FILE_DID"
+    private val PREFERENCE_FILE_MY_WALLET = "PREFERENCE_FILE_MY_WALLET"
+    private val PREF_MASTER_SECRET_ID = "PREF_MASTER_SECRET_ID"
     private val PREF_KEY_DID = "PREF_KEY_DID"
     private val PREF_KEY_VERKEY = "PREF_KEY_VERKEY"
 
-    lateinit var masterSecretId: String
     lateinit var wallet: Wallet
 
     override fun onCreate() {
@@ -33,29 +33,45 @@ class App : Application() {
         wallet = WalletConfig.openWallet()
 
         //4. create secret
-        masterSecretId = WalletConfig.createMasterSecretId(wallet)
-
-        //5. create DID
-        WalletConfig.createDid(wallet)
-            .thenAccept { didAndVerKey ->
-                getSharedPreferences(PREFERENCE_FILE_DID, Context.MODE_PRIVATE)
+        WalletConfig.createMasterSecretId(wallet, getMasterSecretId())
+            .apply {
+                getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
                     .also {
                         with(it.edit()) {
-                            putString(PREF_KEY_DID, didAndVerKey.first)
-                            putString(PREF_KEY_VERKEY, didAndVerKey.second)
+                            putString(PREF_MASTER_SECRET_ID, this@apply)
                             apply()
                         }
                     }
             }
+
+        //5. create DID
+        if (getDid().isNullOrEmpty() || getVerKey().isNullOrEmpty()) {
+            WalletConfig.createDid(wallet)
+                .thenAccept { didAndVerKey ->
+                    getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
+                        .also {
+                            with(it.edit()) {
+                                putString(PREF_KEY_DID, didAndVerKey.first)
+                                putString(PREF_KEY_VERKEY, didAndVerKey.second)
+                                apply()
+                            }
+                        }
+                }
+        }
+    }
+
+    fun getMasterSecretId(): String? {
+        return getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
+            .getString(PREF_MASTER_SECRET_ID, null)
     }
 
     fun getDid(): String? {
-        return getSharedPreferences(PREFERENCE_FILE_DID, Context.MODE_PRIVATE)
+        return getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
             .getString(PREF_KEY_DID, "")
     }
 
     fun getVerKey(): String? {
-        return getSharedPreferences(PREFERENCE_FILE_DID, Context.MODE_PRIVATE)
+        return getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
             .getString(PREF_KEY_VERKEY, "")
     }
 }
