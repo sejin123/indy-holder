@@ -1,12 +1,12 @@
 package lec.baekseokuniv.ssiholder.credentiallist
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import com.google.gson.JsonArray
 import lec.baekseokuniv.ssiholder.R
 import lec.baekseokuniv.ssiholder.data.Credential
 import lec.baekseokuniv.ssiholder.databinding.FragmentCredentialListBinding

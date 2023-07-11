@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'                    //JSON parser
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'              //HTTP network library
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'commons-io:commons-io:2.13.0'
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
