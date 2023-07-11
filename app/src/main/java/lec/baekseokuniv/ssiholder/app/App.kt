@@ -1,12 +1,17 @@
 package lec.baekseokuniv.ssiholder.app
 
 import android.app.Application
+import android.content.Context
 import android.system.Os
 import lec.baekseokuniv.ssiholder.config.PoolConfig
 import lec.baekseokuniv.ssiholder.config.WalletConfig
 import org.hyperledger.indy.sdk.wallet.Wallet
 
 class App : Application() {
+    private val PREFERENCE_FILE_DID = "PREFERENCE_FILE_DID"
+    private val PREF_KEY_DID = "PREF_KEY_DID"
+    private val PREF_KEY_VERKEY = "PREF_KEY_VERKEY"
+
     lateinit var masterSecretId: String
     lateinit var wallet: Wallet
 
@@ -29,5 +34,28 @@ class App : Application() {
 
         //4. create secret
         masterSecretId = WalletConfig.createMasterSecretId(wallet)
+
+        //5. create DID
+        WalletConfig.createDid(wallet)
+            .thenAccept { didAndVerKey ->
+                getSharedPreferences(PREFERENCE_FILE_DID, Context.MODE_PRIVATE)
+                    .also {
+                        with(it.edit()) {
+                            putString(PREF_KEY_DID, didAndVerKey.first)
+                            putString(PREF_KEY_VERKEY, didAndVerKey.second)
+                            apply()
+                        }
+                    }
+            }
+    }
+
+    fun getDid(): String? {
+        return getSharedPreferences(PREFERENCE_FILE_DID, Context.MODE_PRIVATE)
+            .getString(PREF_KEY_DID, "")
+    }
+
+    fun getVerKey(): String? {
+        return getSharedPreferences(PREFERENCE_FILE_DID, Context.MODE_PRIVATE)
+            .getString(PREF_KEY_VERKEY, "")
     }
 }
