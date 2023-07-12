@@ -2,6 +2,7 @@ package lec.baekseokuniv.ssiholder.api
 
 import lec.baekseokuniv.ssiholder.data.argument.IssueArg
 import lec.baekseokuniv.ssiholder.data.argument.IssueOfferArg
+import lec.baekseokuniv.ssiholder.data.payload.IssuePayload
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -17,5 +18,5 @@ interface IssuerApi {
      * 2. issue credential
      */
     @POST("/credential/issue")
-    fun postIssue(@Body issueArg: IssueArg): Call<Void>
+    fun postIssue(@Body issueArg: IssueArg): Call<IssuePayload>
 }
