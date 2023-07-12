@@ -1,16 +1,24 @@
 package lec.baekseokuniv.ssiholder.repository
 
+import lec.baekseokuniv.ssiholder.api.IssuerApi
+import lec.baekseokuniv.ssiholder.config.RetrofitConfig
 import lec.baekseokuniv.ssiholder.data.argument.CredentialInfo
 import lec.baekseokuniv.ssiholder.data.argument.CredentialRequestArg
+import lec.baekseokuniv.ssiholder.data.argument.IssueArg
+import lec.baekseokuniv.ssiholder.data.argument.IssueOfferArg
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateCredentialReq
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverStoreCredential
 import org.hyperledger.indy.sdk.wallet.Wallet
 import java.util.concurrent.CompletableFuture
 
 
-class IssuingRepository {
+class IssuingRepository() {
+    private val issuerApi: IssuerApi = RetrofitConfig.createApi(
+        RetrofitConfig.issuerBaseUrl, IssuerApi::class.java
+    )
+
     /**
-     * credential을 생성하기 위한 metadata와 요청 정보를 담은 객체를 생성하는 메소드
+     * 1. credential을 생성하기 위한 metadata와 요청 정보를 담은 객체를 생성하는 메소드
      */
     fun requestCredential(
         arg: CredentialRequestArg
@@ -31,7 +39,7 @@ class IssuingRepository {
     }
 
     /**
-     * 생성한 Credential을 저장함
+     * 2. 생성한 Credential을 저장함
      */
     fun storeCredential(
         wallet: Wallet,
@@ -47,4 +55,21 @@ class IssuingRepository {
             null
         )
     }
+
+    /**
+     * 3. Credential을 생성하기 위해 issuer에 offer
+     */
+    fun postIssueOffer(issueOffer: String) =
+        issuerApi
+            .postOffer(IssueOfferArg(issueOffer))
+            .execute()
+
+    /**
+     * 4. Credential을 생성하기 위해 issuer에 credential을 issue해달라고 요청
+     */
+    fun postIssue(credOfferJson: String, credReqJson: String) =
+        issuerApi
+            .postIssue(IssueArg(credOfferJson, credReqJson))
+            .execute()
+
 }
