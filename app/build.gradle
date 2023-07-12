@@ -38,7 +38,8 @@ android {
 }
 
 dependencies {
-//    implementation 'net.java.dev.jna:jna:5.7.0@aar'                   //TODO: 아래 indy 1.16.0과 duplicate 나는데 해당 라이브러리가 뭔지 정확히 파악이 필요함
+    //libjnidispatch.so 내 jna version = 4.5.1 이므로 Major version은 동일하되 minor version 5 이상인 library 이어야 함
+    implementation 'net.java.dev.jna:jna:4.5.2'
     implementation 'org.hyperledger:indy:1.16.0'                        //indy wrapper library
     implementation 'com.google.code.gson:gson:2.9.0'                    //JSON parser
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'              //HTTP network library
