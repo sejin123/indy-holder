@@ -5,6 +5,7 @@ import android.content.Context
 import android.system.Os
 import lec.baekseokuniv.ssiholder.config.PoolConfig
 import lec.baekseokuniv.ssiholder.config.WalletConfig
+import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.wallet.Wallet
 
 class App : Application() {
@@ -23,28 +24,18 @@ class App : Application() {
         // 2. manifest 등에서 설정할 수 있는지 여부 확인
         //지갑 설정 과정
         //1. load indy library
+        //dataDir.absolutePath = /data/user/0/lec.baekseokuniv.ssiholder
         Os.setenv("EXTERNAL_STORAGE", dataDir.absolutePath, true)
         System.loadLibrary("indy")
 
-        //2. create pool
-        PoolConfig.createPool()
+        //2. create and then open pool
+        Pool.openPoolLedger(PoolConfig.getPoole(this), "{}").get()
 
         //3. create and then open wallet
-        wallet = WalletConfig.openWallet()
+        WalletConfig.createWallet(this).get()
+        wallet = WalletConfig.openWallet().get()
 
-        //4. create secret
-        WalletConfig.createMasterSecretId(wallet, getMasterSecretId())
-            .apply {
-                getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
-                    .also {
-                        with(it.edit()) {
-                            putString(PREF_MASTER_SECRET_ID, this@apply)
-                            apply()
-                        }
-                    }
-            }
-
-        //5. create DID
+        //4. create DID
         if (getDid().isNullOrEmpty() || getVerKey().isNullOrEmpty()) {
             WalletConfig.createDid(wallet)
                 .thenAccept { didAndVerKey ->
@@ -58,9 +49,22 @@ class App : Application() {
                         }
                 }
         }
+        //create secret when issuing
+        if (!getMasterSecret().isNullOrEmpty())
+            return
+        WalletConfig.createMasterSecret(wallet, getMasterSecret())
+            .apply {
+                getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
+                    .also {
+                        with(it.edit()) {
+                            putString(PREF_MASTER_SECRET_ID, this@apply)
+                            apply()
+                        }
+                    }
+            }
     }
 
-    fun getMasterSecretId(): String? {
+    fun getMasterSecret(): String? {
         return getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
             .getString(PREF_MASTER_SECRET_ID, null)
     }
