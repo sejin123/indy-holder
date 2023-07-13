@@ -29,9 +29,9 @@ class CredentialListFragment : Fragment() {
                 (requireActivity().application as App).wallet,
                 CredentialFilter(
                     "EtAGQxkwjMBgCkG4M6jXjP:2:FIANL-TEST:1.0",
-                    "FIANL-TEST",
-                    "1.0",
-                    "EtAGQxkwjMBgCkG4M6jXjP:3:CL:EtAGQxkwjMBgCkG4M6jXjP:2:FIANL-TEST:1.0:cred-def-TAG"
+                    schema_name = null,
+                    schema_version = null,
+                    cred_def_id = null
                 ),
             )
         )
