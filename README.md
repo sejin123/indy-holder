@@ -18,7 +18,7 @@ hyperledger 기반의 SSI(Self-Sovereign-Identity) holder 만들기 실습
 
 ### 학습 목표
 - DID 개념을 이해하고 DID를 이용한 holder 앱을 설계, 구현할 수 있다.
-- kotlin 언어를 사용하여 안드로이드 앱을 개발할 수 있다.
+- JAVA 언어를 사용하여 안드로이드 앱을 개발할 수 있다.
 - git의 개념을 이해하고 협업하여 소스를 관리할 수 있다.
 - 기획, 셜계 및 구현 사항에 대한 명세 문서를 작성할 수 있다.
 
@@ -38,24 +38,66 @@ clone한 repository에 아래 세팅이 되어 있는지 확인합니다.
   - libjnidispatch.so
   
 ### project structure
-- /app/libs: 프로젝트에서 사용하는 library 파일을 import. [build.gradle](app/build.gradle) 파일에 dependency 추가
+- /app/libs: 프로젝트에서 사용하는 library 파일을 직접 import. [build.gradle](app/build.gradle) 파일에 dependency 추가한 library는 External Libraries에 추가 된다. 
 - /app/src/main/java: 앱을 구동하기 위한 소스를 작업하는 directory.
 - /app/src/main/jniLibs: indy library를 import. 각 CPU architecture 별 libindy 라이브러리(~.so)를 import한다.
 - /app/src/main/res: UI 구성을 위한 각종 정적 resource 파일 directory
 
-### sdk API
+### indy client directory structure
+![indy client dir](/Users/sohyun/Desktop/indy_client_dir_structure.png)
+
+### 
+sdk API
 ##### issue
-- credential offer: 발급을 위한 제안 (entry point)
-- credReq 생성: credential 발급을 위한 metaData 등의 요청 정보를 생성
+1. credential offer: 발급을 위한 제안 (entry point)
+2. credReq 생성: credential 발급을 위한 metaData 등의 요청 정보를 생성
     Anoncreds.proverCreateCredentialReq(wallet, did, credOffer, credDefJson, masterSecret)
-
 ##### credential
-- credential 저장
+3. credential 저장
     Anoncreds.proverStoreCredential(wallet, @Nullable credId, credReqMetadataJson, credJson, credDefJson, @Nullable revRegDefJson)
-- 저장한 credential 조회
-    Anoncreds.proverGetCredentials(wallet, filterString)
+5. 저장한 credential 조회
+ - filter를 이용하여 다 건 조회 (@Deprecated)
+```
+String filterJson = 
+{
+  "schema_id": string,
+  "schema_name": Optional<string>,
+  "schema_version": Optional<string>,
+  "cred_def_id": Optional<string>
+}
+Anoncreds.proverGetCredentials(wallet, filterJson)
+```
+ - credId를 이용하여 단 건 조회
+```
+Anoncreds.proverGetCredential(wallet, credId)
+```
+6. credential 삭제
+```
+Anoncreds.proverDeleteCredential(wallet, credId)
+```
 
-### issuer API
+###
+issuer API
 - issuer domain
     baseUrl = "http://211.37.24.246:8080/"
 - [swaggerUI(API 명세)](http://211.37.24.246:8080/webjars/swagger-ui/index.html)
+
+### credential data structure
+```
+credentials json =
+[{
+   "referent": string,
+   "attrs": {"key1":"raw_value1", "key2":"raw_value2"},
+   "schema_id": string,
+   "cred_def_id": string,
+   "rev_reg_id": Optional<string>, - identifier of revocation registry definition
+   "cred_rev_id": Optional<string> - identifier of credential in the revocation registry definition
+}]
+```
+referent: credential Id </br>
+attrs: credential attributes </br>
+schema_id: schema Id </br>
+cred_def_id: credential definition id </br>
+</br>
+rev_reg_id: identifier of revocation registry definition </br>
+cred_rev_id: identifier of credential in the revocation registry definition </br>
