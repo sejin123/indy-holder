@@ -42,3 +42,20 @@ clone한 repository에 아래 세팅이 되어 있는지 확인합니다.
 - /app/src/main/java: 앱을 구동하기 위한 소스를 작업하는 directory.
 - /app/src/main/jniLibs: indy library를 import. 각 CPU architecture 별 libindy 라이브러리(~.so)를 import한다.
 - /app/src/main/res: UI 구성을 위한 각종 정적 resource 파일 directory
+
+### sdk API
+##### issue
+- credential offer: 발급을 위한 제안 (entry point)
+- credReq 생성: credential 발급을 위한 metaData 등의 요청 정보를 생성
+    Anoncreds.proverCreateCredentialReq(wallet, did, credOffer, credDefJson, masterSecret)
+
+##### credential
+- credential 저장
+    Anoncreds.proverStoreCredential(wallet, @Nullable credId, credReqMetadataJson, credJson, credDefJson, @Nullable revRegDefJson)
+- 저장한 credential 조회
+    Anoncreds.proverGetCredentials(wallet, filterString)
+
+### issuer API
+- issuer domain
+    baseUrl = "http://211.37.24.246:8080/"
+- [swaggerUI(API 명세)](http://211.37.24.246:8080/webjars/swagger-ui/index.html)
