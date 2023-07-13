@@ -11,7 +11,7 @@ hyperledger 기반의 SSI(Self-Sovereign-Identity) holder 만들기 실습
     - [indy-holder](https://github.com/bdgen/indy-holder)
 - 공유 가능한 slide, spread sheet, word 툴
   - 각종 명세 문서를 작성 하기 위한 문서 도구
-  ex) MS-office, Google Docs, [PlantUML](https://plantuml.com/ko/) 등
+    ex) MS-office, Google Docs, [PlantUML](https://plantuml.com/ko/) 등
 
 ### repository 생성
 초기 repository인 [indy-holder](https://github.com/bdgen/indy-holder)를 [fork](https://docs.github.com/ko/get-started/quickstart/fork-a-repo#forking-a-repository)하여 팀 별 신규 repository를 생성한 후 작업합니다.
@@ -36,27 +36,31 @@ clone한 repository에 아래 세팅이 되어 있는지 확인합니다.
   - libindy_shared.so
   - libc++_shared.so
   - libjnidispatch.so
-  
+
 ### project structure
-- /app/libs: 프로젝트에서 사용하는 library 파일을 직접 import. [build.gradle](app/build.gradle) 파일에 dependency 추가한 library는 External Libraries에 추가 된다. 
+- /app/libs: 프로젝트에서 사용하는 library 파일을 직접 import. [build.gradle](app/build.gradle) 파일에 dependency 추가한 library는 External Libraries에 추가 된다.
 - /app/src/main/java: 앱을 구동하기 위한 소스를 작업하는 directory.
 - /app/src/main/jniLibs: indy library를 import. 각 CPU architecture 별 libindy 라이브러리(~.so)를 import한다.
 - /app/src/main/res: UI 구성을 위한 각종 정적 resource 파일 directory
 
 ### indy client directory structure
-![indy client dir](/Users/sohyun/Desktop/indy_client_dir_structure.png)
+![indy client dir](app/etc/indy_client_dir_structure.png)
 
 ### 
 sdk API
 ##### issue
 1. credential offer: 발급을 위한 제안 (entry point)
 2. credReq 생성: credential 발급을 위한 metaData 등의 요청 정보를 생성
-    Anoncreds.proverCreateCredentialReq(wallet, did, credOffer, credDefJson, masterSecret)
+```
+Anoncreds.proverCreateCredentialReq(wallet, did, credOffer, credDefJson, masterSecret)
+```
 ##### credential
 3. credential 저장
-    Anoncreds.proverStoreCredential(wallet, @Nullable credId, credReqMetadataJson, credJson, credDefJson, @Nullable revRegDefJson)
+```
+Anoncreds.proverStoreCredential(wallet, @Nullable credId, credReqMetadataJson, credJson, credDefJson, @Nullable revRegDefJson)
+```
 5. 저장한 credential 조회
- - filter를 이용하여 다 건 조회 (@Deprecated)
+- filter를 이용하여 다 건 조회 (@Deprecated)
 ```
 String filterJson = 
 {
@@ -67,7 +71,7 @@ String filterJson =
 }
 Anoncreds.proverGetCredentials(wallet, filterJson)
 ```
- - credId를 이용하여 단 건 조회
+- credId를 이용하여 단 건 조회
 ```
 Anoncreds.proverGetCredential(wallet, credId)
 ```
@@ -79,7 +83,7 @@ Anoncreds.proverDeleteCredential(wallet, credId)
 ###
 issuer API
 - issuer domain
-    baseUrl = "http://211.37.24.246:8080/"
+  baseUrl = "http://211.37.24.246:8080/"
 - [swaggerUI(API 명세)](http://211.37.24.246:8080/webjars/swagger-ui/index.html)
 
 ### credential data structure
