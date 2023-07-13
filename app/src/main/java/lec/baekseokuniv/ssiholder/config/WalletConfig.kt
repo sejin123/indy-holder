@@ -32,7 +32,7 @@ object WalletConfig {
         Anoncreds.proverCreateMasterSecret(wallet, masterSecretId).get()
 
     fun createDid(wallet: Wallet): CompletableFuture<Pair<String, String>> {
-        return Did.createAndStoreMyDid(wallet, "did")
+        return Did.createAndStoreMyDid(wallet, "{}")
             .thenApply {
                 return@thenApply Pair(it.did, it.verkey)
             }

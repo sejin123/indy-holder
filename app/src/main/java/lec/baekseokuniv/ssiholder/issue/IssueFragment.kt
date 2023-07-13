@@ -1,7 +1,6 @@
 package lec.baekseokuniv.ssiholder.issue
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,32 +64,45 @@ class IssueFragment : Fragment() {
                                 credOffer,
                                 credentialInfo.testCredDefJson
                             )
-                        ).thenAccept {
-                            binder.txtIssuableCredDef.text = it.credDefJson
-                            binder.txtIssuableCredReq.text = it.credReqJson
-                            binder.txtIssuableCredMetaData.text = it.credReqMetadataJson
-                            issueRepository.postIssue(
-                                credOffer,
-                                it.credReqJson,
-                                object : Callback<IssuePayload> {
-                                    override fun onResponse(
-                                        call: Call<IssuePayload>,
-                                        response: Response<IssuePayload>
-                                    ) {
-                                        val credential = response.body()?.credJson ?: return
-                                        binder.txtIssuableCred.text = credential
-                                        issueRepository.storeCredential(
-                                            app.wallet,
-                                            it,
-                                            credential
-                                        )
-                                    }
+                        ).thenAcceptAsync(
+                            {
+                                binder.txtIssuableCredDef.text = it.credDefJson
+                                binder.txtIssuableCredReq.text = it.credReqJson
+                                binder.txtIssuableCredMetaData.text = it.credReqMetadataJson
+                                issueRepository.postIssue(
+                                    credOffer,
+                                    it.credReqJson,
+                                    object : Callback<IssuePayload> {
+                                        override fun onResponse(
+                                            call: Call<IssuePayload>,
+                                            response: Response<IssuePayload>
+                                        ) {
+                                            val credential = response.body()?.credentialJson ?: return
+                                            binder.txtIssuableCred.text = credential
+                                            issueRepository.storeCredential(
+                                                app.wallet,
+                                                it,
+                                                credential
+                                            )
+                                                .exceptionally {
+                                                    it.printStackTrace()
+                                                    null
+                                                }
+                                        }
 
-                                    override fun onFailure(call: Call<IssuePayload>, t: Throwable) {
-                                        t.printStackTrace()
+                                        override fun onFailure(
+                                            call: Call<IssuePayload>,
+                                            t: Throwable
+                                        ) {
+                                            t.printStackTrace()
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            },
+                            app.mainExecutor
+                        ).exceptionally {
+                            it.printStackTrace()
+                            null
                         }
                     }
 

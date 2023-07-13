@@ -10,7 +10,7 @@ import org.hyperledger.indy.sdk.wallet.Wallet
 
 class App : Application() {
     private val PREFERENCE_FILE_MY_WALLET = "PREFERENCE_FILE_MY_WALLET"
-    private val PREF_MASTER_SECRET_ID = "PREF_MASTER_SECRET_ID"
+    private val PREF_MASTER_SECRET = "PREF_MASTER_SECRET_ID"
     private val PREF_KEY_DID = "PREF_KEY_DID"
     private val PREF_KEY_VERKEY = "PREF_KEY_VERKEY"
 
@@ -47,6 +47,9 @@ class App : Application() {
                                 apply()
                             }
                         }
+                }.exceptionally {
+                    it.printStackTrace()
+                    return@exceptionally null
                 }
         }
         //create secret when issuing
@@ -57,7 +60,7 @@ class App : Application() {
                 getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
                     .also {
                         with(it.edit()) {
-                            putString(PREF_MASTER_SECRET_ID, this@apply)
+                            putString(PREF_MASTER_SECRET, this@apply)
                             apply()
                         }
                     }
@@ -66,7 +69,7 @@ class App : Application() {
 
     fun getMasterSecret(): String? {
         return getSharedPreferences(PREFERENCE_FILE_MY_WALLET, Context.MODE_PRIVATE)
-            .getString(PREF_MASTER_SECRET_ID, null)
+            .getString(PREF_MASTER_SECRET, null)
     }
 
     fun getDid(): String? {
