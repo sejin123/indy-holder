@@ -1,11 +1,13 @@
 package lec.baekseokuniv.ssiholder
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import lec.baekseokuniv.ssiholder.databinding.ActivityMainBinding
+import lec.baekseokuniv.ssiholder.issue.IssueFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +24,14 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binder.appBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // deeplink 처리
+        val data: Uri = intent?.data ?: return
+        val param = data.getQueryParameter("entry") ?: return
+        supportFragmentManager
+            .beginTransaction()
+            .add(binder.container.id, IssueFragment.newInstance(param))
+            .commit()
     }
 
     fun navigateToFragment(fragment: Fragment) {
