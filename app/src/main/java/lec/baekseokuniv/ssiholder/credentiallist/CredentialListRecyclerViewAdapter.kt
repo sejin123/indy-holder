@@ -24,8 +24,8 @@ class CredentialListRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
-        holder.txtId.text = item.id
-        holder.txtName.text = item.name
+        holder.txtId.text = item.schema_id
+        holder.txtName.text = item.cred_def_id
     }
 
     override fun getItemCount(): Int = itemList.size

@@ -6,23 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.google.gson.JsonArray
 import lec.baekseokuniv.ssiholder.R
-import lec.baekseokuniv.ssiholder.data.Credential
+import lec.baekseokuniv.ssiholder.app.App
+import lec.baekseokuniv.ssiholder.data.CredentialFilter
 import lec.baekseokuniv.ssiholder.databinding.FragmentCredentialListBinding
+import lec.baekseokuniv.ssiholder.repository.CredentialRepository
 
 class CredentialListFragment : Fragment() {
+    private val credentialRepository = CredentialRepository()
     private lateinit var binder: FragmentCredentialListBinding
-
-    //FIXME: 실제 데이터를 붙일 때 해당 변수 수정 예정 (20230706 ksh)
-    private val credentialList = listOf(
-        Credential(
-            "123456",
-            "test credential",
-            "schema_id",
-            "credential_definition_id"
-        )
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +24,17 @@ class CredentialListFragment : Fragment() {
             inflater,
             R.layout.fragment_credential_list, container, false
         )
-        binder.rvCredentialList.adapter = CredentialListRecyclerViewAdapter(credentialList)
+        binder.rvCredentialList.adapter = CredentialListRecyclerViewAdapter(
+            credentialRepository.getCredentialList(
+                (requireActivity().application as App).wallet,
+                CredentialFilter(
+                    "EtAGQxkwjMBgCkG4M6jXjP:2:FIANL-TEST:1.0",
+                    "FIANL-TEST",
+                    "1.0",
+                    "EtAGQxkwjMBgCkG4M6jXjP:3:CL:EtAGQxkwjMBgCkG4M6jXjP:2:FIANL-TEST:1.0:cred-def-TAG"
+                ),
+            )
+        )
         return binder.root
     }
 

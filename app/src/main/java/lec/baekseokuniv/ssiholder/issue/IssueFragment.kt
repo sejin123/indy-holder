@@ -18,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-private const val ARG_ISSUABLE_DATA = "argument_issuable_data"
+const val ARG_ISSUABLE_DATA = "argument_issuable_data"
 
 class IssueFragment : Fragment() {
     private lateinit var binder: FragmentIssueBinding

@@ -1,10 +1,10 @@
 package lec.baekseokuniv.ssiholder.data
 
-//FIXME: 데이터 분석 후 구조 수정 예정 (20230706 ksh)
 data class Credential(
-    val id: String,
-    val name: String,
-    val schemaId: String,
-    val credentialDefinitionId: String,
-    val values: MutableMap<String, String>? = null
+    val referent: String,
+    val schema_id: String,
+    val cred_def_id: String,
+    val rev_reg_id: String? = null,
+    val cred_rev_id: String? = null,
+    val attrs: MutableMap<String, String>? = null
 )
