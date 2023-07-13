@@ -24,18 +24,22 @@ class CredentialListRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
-        holder.txtId.text = item.schema_id
-        holder.txtName.text = item.cred_def_id
+        holder.txtCredId.text = item.referent
+        holder.txtSchema.text = item.schema_id
+        holder.txtCredDefId.text = item.cred_def_id
+        holder.txtRawData.text = item.raw
     }
 
     override fun getItemCount(): Int = itemList.size
 
     inner class ViewHolder(binding: ItemCredentialBinding) : RecyclerView.ViewHolder(binding.root) {
-        val txtId: TextView = binding.txtCredentialId
-        val txtName: TextView = binding.txtCredentialName
+        val txtCredId: TextView = binding.txtCredentialId
+        val txtSchema: TextView = binding.txtSchemaName
+        val txtCredDefId: TextView = binding.txtCredDef
+        val txtRawData: TextView = binding.txtRaw
 
         override fun toString(): String {
-            return "${super.toString()} '${txtName.text}'"
+            return "${super.toString()} '${txtSchema.text}'"
         }
     }
 }
