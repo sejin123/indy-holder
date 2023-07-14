@@ -25,7 +25,8 @@ const val ARG_OFFER = "argument_issuable_data"
 class IssueFragment : Fragment() {
     private lateinit var binder: FragmentIssueBinding
     private var offerSecret: String? = null
-
+    private var offerPayload: OfferPayload? = null
+    private var credentialInfo: CredentialInfo? = null
     private val issueRepository = IssuingRepository()
 
     companion object {
@@ -54,75 +55,78 @@ class IssueFragment : Fragment() {
             binder.txtOfferData.text = offerSecret ?: "start issue from qr"
             offerSecret ?: return@setOnClickListener
 
-            var offerPayload: OfferPayload
-            issueRepository.postIssueOffer(
-                offerSecret?:"",
-                object : Callback<OfferPayload> {
+            issueRepository.postIssue(
+                IssueArg(
+                    offerSecret ?: "",
+                    offerPayload!!.credOfferJson,
+                    credentialInfo!!.credReqJson
+                ),
+                object : Callback<IssuePayload> {
                     override fun onResponse(
-                        call: Call<OfferPayload>,
-                        response: Response<OfferPayload>
+                        call: Call<IssuePayload>,
+                        response: Response<IssuePayload>
                     ) {
-                        offerPayload = response.body() ?: return
-                        binder.txtOfferData.text = offerPayload.credOfferJson
-                        issueRepository.requestCredential(
-                            CredentialRequestArg(
-                                app.wallet,
-                                app.getDid() ?: return,
-                                app.getMasterSecret() ?: return,
-                                offerPayload.credOfferJson,
-                                offerPayload.credDefJson
-                            )
-                        ).thenApplyAsync(
-                            {
-                                binder.txtIssuableCredDef.text = it.credDefJson
-                                binder.txtIssuableCredReq.text = it.credReqJson
-                                binder.txtIssuableCredMetaData.text = it.credReqMetadataJson
-                                issueRepository.postIssue(
-                                    IssueArg(
-                                        offerSecret ?: "",
-                                        offerPayload.credOfferJson,
-                                        it.credReqJson
-                                    ),
-                                    object : Callback<IssuePayload> {
-                                        override fun onResponse(
-                                            call: Call<IssuePayload>,
-                                            response: Response<IssuePayload>
-                                        ) {
-                                            val credential =
-                                                response.body()?.credentialJson ?: return
-                                            binder.txtIssuableCred.text = credential
-                                            issueRepository.storeCredential(
-                                                app.wallet,
-                                                it,
-                                                credential
-                                            )
-                                                .exceptionally {
-                                                    it.printStackTrace()
-                                                    null
-                                                }
-                                        }
-
-                                        override fun onFailure(
-                                            call: Call<IssuePayload>,
-                                            t: Throwable
-                                        ) {
-                                            t.printStackTrace()
-                                        }
-                                    }
-                                )
-                            },
-                            app.mainExecutor
-                        ).exceptionally {
-                            it.printStackTrace()
-                        }
+                        val credential =
+                            response.body()?.credentialJson ?: return
+                        binder.txtIssuableCred.text = credential
+                        issueRepository.storeCredential(
+                            app.wallet,
+                            credentialInfo!!,
+                            credential
+                        )
+                            .exceptionally {
+                                it.printStackTrace()
+                                null
+                            }
                     }
 
-                    override fun onFailure(call: Call<OfferPayload>, t: Throwable) {
+                    override fun onFailure(
+                        call: Call<IssuePayload>,
+                        t: Throwable
+                    ) {
                         t.printStackTrace()
                     }
                 }
             )
         }
+
+        issueRepository.postIssueOffer(
+            offerSecret ?: "",
+            object : Callback<OfferPayload> {
+                override fun onResponse(
+                    call: Call<OfferPayload>,
+                    response: Response<OfferPayload>
+                ) {
+                    val offerPayload = response.body() ?: return
+                    this@IssueFragment.offerPayload = offerPayload
+                    val app = requireActivity().application as App
+                    binder.txtOfferData.text = offerPayload.credOfferJson
+                    issueRepository.requestCredential(
+                        CredentialRequestArg(
+                            app.wallet,
+                            app.getDid() ?: return,
+                            app.getMasterSecret() ?: return,
+                            offerPayload.credOfferJson,
+                            offerPayload.credDefJson
+                        )
+                    ).thenApplyAsync(
+                        {
+                            this@IssueFragment.credentialInfo = it
+                            binder.txtIssuableCredDef.text = it.credDefJson
+                            binder.txtIssuableCredReq.text = it.credReqJson
+                            binder.txtIssuableCredMetaData.text = it.credReqMetadataJson
+                        },
+                        app.mainExecutor
+                    ).exceptionally {
+                        it.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<OfferPayload>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            }
+        )
         return binder.root
     }
 
