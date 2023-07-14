@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         // deeplink 처리
         val data: Uri = intent?.data ?: return
-        val param = data.getQueryParameter("entry") ?: return
+        val param = data.getQueryParameter("secret") ?: return
         supportFragmentManager
             .beginTransaction()
             .add(binder.container.id, IssueFragment.newInstance(param))

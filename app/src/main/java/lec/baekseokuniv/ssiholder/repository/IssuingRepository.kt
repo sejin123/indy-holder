@@ -7,6 +7,7 @@ import lec.baekseokuniv.ssiholder.data.argument.CredentialRequestArg
 import lec.baekseokuniv.ssiholder.data.argument.IssueArg
 import lec.baekseokuniv.ssiholder.data.argument.IssueOfferArg
 import lec.baekseokuniv.ssiholder.data.payload.IssuePayload
+import lec.baekseokuniv.ssiholder.data.payload.OfferPayload
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateCredentialReq
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverStoreCredential
 import org.hyperledger.indy.sdk.wallet.Wallet
@@ -22,7 +23,7 @@ class IssuingRepository() {
     /**
      * 1. Credential을 생성하기 위해 issuer에 offer
      */
-    fun postIssueOffer(credDefId: String, callback: Callback<String?>) =
+    fun postIssueOffer(credDefId: String, callback: Callback<OfferPayload>) =
         issuerApi
             .postOffer(IssueOfferArg(credDefId))
             .enqueue(callback)
@@ -69,8 +70,11 @@ class IssuingRepository() {
     /**
      * 4. Credential을 생성하기 위해 issuer에 credential을 issue해달라고 요청
      */
-    fun postIssue(credOfferJson: String, credReqJson: String, callback: Callback<IssuePayload>) =
+    fun postIssue(
+        issueArg: IssueArg,
+        callback: Callback<IssuePayload>
+    ) =
         issuerApi
-            .postIssue(IssueArg(credOfferJson, credReqJson))
+            .postIssue(issueArg)
             .enqueue(callback)
 }

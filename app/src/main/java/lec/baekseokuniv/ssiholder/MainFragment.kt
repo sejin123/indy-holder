@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.trace
 import androidx.databinding.DataBindingUtil
+import lec.baekseokuniv.ssiholder.app.App
 import lec.baekseokuniv.ssiholder.credentiallist.CredentialListFragment
 import lec.baekseokuniv.ssiholder.databinding.FragmentMainBinding
 import lec.baekseokuniv.ssiholder.issue.IssueFragment
@@ -25,11 +26,12 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binder = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
-        "Hello, SSI Holder!".also { binder.txtWelcoming.text = it }
+        "secret is\n${(requireActivity().application as App).getMasterSecret()}"
+            .also { binder.txtWelcoming.text = it }
 
         val mainActivity: MainActivity = requireActivity() as MainActivity
         binder.btnNavigateToIssue.setOnClickListener {
-            mainActivity.navigateToFragment(IssueFragment.newInstance())
+            mainActivity.navigateToFragment(IssueFragment.newInstance(null))
         }
         binder.btnNavigateToVerification.setOnClickListener {
             mainActivity.navigateToFragment(VerificationFragment.newInstance())
