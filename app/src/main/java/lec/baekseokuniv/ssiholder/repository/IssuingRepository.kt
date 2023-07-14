@@ -23,9 +23,9 @@ class IssuingRepository() {
     /**
      * 1. Credential을 생성하기 위해 issuer에 offer
      */
-    fun postIssueOffer(credDefId: String, callback: Callback<OfferPayload>) =
+    fun postIssueOffer(offerSecret: String, callback: Callback<OfferPayload>) =
         issuerApi
-            .postOffer(IssueOfferArg(credDefId))
+            .postOffer(offerSecret)
             .enqueue(callback)
 
     /**

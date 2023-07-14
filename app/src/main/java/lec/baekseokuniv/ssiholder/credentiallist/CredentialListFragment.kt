@@ -27,12 +27,13 @@ class CredentialListFragment : Fragment() {
         binder.rvCredentialList.adapter = CredentialListRecyclerViewAdapter(
             credentialRepository.getCredentialList(
                 (requireActivity().application as App).wallet,
-                CredentialFilter(
-                    "EtAGQxkwjMBgCkG4M6jXjP:2:FIANL-TEST:1.0",
-                    schema_name = null,
-                    schema_version = null,
-                    cred_def_id = null
-                ),
+                null
+//                CredentialFilter(
+//                    "EtAGQxkwjMBgCkG4M6jXjP:2:test:10",
+//                    schema_name = null,
+//                    schema_version = null,
+//                    cred_def_id = null
+//                ),
             )
         )
         return binder.root

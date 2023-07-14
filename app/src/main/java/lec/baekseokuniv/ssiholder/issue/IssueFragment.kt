@@ -54,10 +54,9 @@ class IssueFragment : Fragment() {
             binder.txtOfferData.text = offerSecret ?: "start issue from qr"
             offerSecret ?: return@setOnClickListener
 
-            val credentialInfo = CredentialInfo("", "", "")
             var offerPayload: OfferPayload
             issueRepository.postIssueOffer(
-                credentialInfo.testCredDefId,
+                offerSecret?:"",
                 object : Callback<OfferPayload> {
                     override fun onResponse(
                         call: Call<OfferPayload>,

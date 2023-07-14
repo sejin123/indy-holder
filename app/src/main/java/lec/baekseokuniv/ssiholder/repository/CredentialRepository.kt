@@ -12,7 +12,7 @@ class CredentialRepository() {
     fun getCredentialList(wallet: Wallet, filter: CredentialFilter?): List<Credential> {
         val raw: String = getRawCredentials(
             wallet,
-            if (filter == null) "NULL" else Gson().toJson(filter).toString()
+            if (filter == null) "{}" else Gson().toJson(filter).toString()
         )
         val parsedList: List<Credential> =
             Gson().fromJson(raw, object : TypeToken<List<Credential>>() {}.type)
