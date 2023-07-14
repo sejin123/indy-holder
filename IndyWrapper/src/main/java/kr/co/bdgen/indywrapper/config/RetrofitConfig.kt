@@ -26,7 +26,7 @@ object RetrofitConfig {
                 .build()
         )
 
-    fun <T> createApi(baseUrl: String, api: Class<T>): T = retrofitBuilder
+    private fun <T> createApi(baseUrl: String, api: Class<T>): T = retrofitBuilder
         .baseUrl(baseUrl)
         .build()
         .create(api)
