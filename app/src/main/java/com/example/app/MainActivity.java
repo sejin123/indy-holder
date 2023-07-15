@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.net.URL;
 
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
+import kr.co.bdgen.indywrapper.repository.CredentialRepository;
 import kr.co.bdgen.indywrapper.repository.IssuingRepository;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +22,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView text = (TextView) findViewById(R.id.txt_main);
+        String credJsonArray = getCredential();
+        text.setText(credJsonArray);
+
         //deeplink 처리
         //deeplink = indy://holder?secret=blarblar
         //scheme = indy
@@ -27,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         //queryparameter = secret
 
         Uri data = getIntent().getData();
+        getIntent().getData();
 
-
-        if (data == null) {
+        if(data == null) {
             return;
         }
 
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("[SUCCESS]", offerPayload.getCredDefJson() + "\n" + offerPayload.getCredOfferJson());
                     offer = offerPayload;
 
+                    //request and issue credential
                     repository.requestCredential(
                             MyApplication.getWallet(),
                             MyApplication.getDid(this),
@@ -57,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
                                                 "\n" +
                                                 credentialInfo.getCredReqJson() +
                                                 "\n" +
-                                                credentialInfo.getTestCredDefJson() +
+                                                credentialInfo.getTestCredDefId() +
                                                 "\n" +
                                                 issuePayload.getCredentialJson()
-
                                 );
 
+                                //3. store credential
                                 repository.storeCredential(
                                         MyApplication.getWallet(),
                                         credentialInfo,
@@ -77,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                 );
                                 return null;
+
                             },
                             throwable -> {
                                 Log.e("[ERROR]", throwable.getMessage(), throwable);
@@ -90,5 +98,17 @@ public class MainActivity extends AppCompatActivity {
                     return null;
                 }
         );
+
+
+    }
+
+    private String getCredential() {
+        String credential;
+        CredentialRepository credentialRepository = new CredentialRepository();
+        credential = credentialRepository.getRawCredentials(
+                MyApplication.getWallet(),
+                "{}"
+        );
+        return credential;
     }
 }
