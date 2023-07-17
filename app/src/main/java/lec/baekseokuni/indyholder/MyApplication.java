@@ -1,4 +1,4 @@
-package lec.baekseokuni.indyholder.app;
+package lec.baekseokuni.indyholder;
 
 import android.app.Application;
 
