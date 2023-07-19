@@ -27,13 +27,17 @@ public class MyApplication extends Application {
     }
 
     public static String getDid(Context context) {
-        return context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE)
-                .getString(PREF_KEY_DID, "");
+        String did = null;
+        SharedPreferences pref = context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE);
+        did = pref.getString(PREF_KEY_DID, "");
+        return did;
     }
 
     public static String getMasterSecret(Context context) {
-        return context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE)
-                .getString(PREF_KEY_MASTER_SECRET, "");
+        String masterSecret = null;
+        SharedPreferences pref = context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE);
+        masterSecret = pref.getString(PREF_KEY_MASTER_SECRET, "");
+        return masterSecret;
     }
 
     @Override
