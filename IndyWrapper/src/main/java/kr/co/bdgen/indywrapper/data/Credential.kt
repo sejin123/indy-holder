@@ -10,7 +10,7 @@ import java.io.Serializable
  */
 @Parcelize
 data class Credential(
-    val referent: String,
+    @SerializedName("referent") val id: String,
     @SerializedName("schema_id") val schemaId: String,
     @SerializedName("cred_def_id") val credDefId: String,
     @SerializedName("rev_reg_id") val revRegId: String? = null,

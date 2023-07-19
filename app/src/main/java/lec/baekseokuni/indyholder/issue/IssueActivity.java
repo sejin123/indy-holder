@@ -1,15 +1,14 @@
 package lec.baekseokuni.indyholder.issue;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import kr.co.bdgen.indywrapper.data.argument.CredentialInfo;
 import kr.co.bdgen.indywrapper.data.payload.IssuePayload;
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
-import kr.co.bdgen.indywrapper.repository.CredentialRepository;
 import kr.co.bdgen.indywrapper.repository.IssuingRepository;
 import lec.baekseokuni.indyholder.MyApplication;
 import lec.baekseokuni.indyholder.R;
