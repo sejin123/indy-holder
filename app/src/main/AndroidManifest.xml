@@ -13,6 +13,9 @@
         android:theme="@style/Theme.SSIHolder"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".credential.CredentialActivity"
+            android:exported="false" />
+        <activity
             android:name=".credential.CredentialListActivity"
             android:exported="false" />
         <activity

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -15,6 +16,13 @@ import java.util.List;
 public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<CredentialRecyclerViewAdapter.ViewHolder> {
 
     private final List<Credential> credentialList;
+
+    private final View.OnClickListener onNavCred = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
 
     public CredentialRecyclerViewAdapter(List<Credential> items) {
         credentialList = items;
@@ -32,6 +40,7 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
         holder.txtCredId.setText(credData.getId());
         holder.txtSchemaId.setText(credData.getSchemaId());
         holder.txtCredDefId.setText(credData.getCredDefId());
+        holder.itemView.setOnClickListener(onNavCred);
     }
 
     @Override
