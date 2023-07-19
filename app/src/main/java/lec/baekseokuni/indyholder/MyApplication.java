@@ -1,6 +1,7 @@
 package lec.baekseokuni.indyholder;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +20,22 @@ public class MyApplication extends Application {
     public static final String PREF_KEY_VER_KEY = "PREF_KEY_VER_KEY";
     public static final String PREF_KEY_MASTER_SECRET = "PREF_KEY_MASTER_SECRET";
 
+    private static Wallet wallet;
+
+    public static Wallet getWallet() {
+        return wallet;
+    }
+
+    public static String getDid(Context context) {
+        return context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE)
+                .getString(PREF_KEY_DID, "");
+    }
+
+    public static String getMasterSecret(Context context) {
+        return context.getSharedPreferences(WALLET_PREFERENCES, MODE_PRIVATE)
+                .getString(PREF_KEY_MASTER_SECRET, "");
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,7 +53,7 @@ public class MyApplication extends Application {
             WalletConfig.createWallet(this).get();
 
             //5. wallet 열기
-            Wallet wallet = WalletConfig.openWallet().get();
+            wallet = WalletConfig.openWallet().get();
 
             //6. did, verKey 생성
             Pair<String, String> didAndVerKey = WalletConfig.createDid(wallet).get();
