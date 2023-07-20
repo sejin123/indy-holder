@@ -9,7 +9,7 @@ import java.time.Duration
 
 
 object RetrofitConfig {
-    val issuerBaseUrl = "http://211.37.24.246:8080/"
+    const val issuerBaseUrl = "http://211.37.24.246:8080/"
 
     private val retrofitBuilder: Retrofit.Builder = Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())

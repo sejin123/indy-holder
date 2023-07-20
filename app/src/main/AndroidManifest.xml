@@ -20,7 +20,19 @@
             android:exported="false" />
         <activity
             android:name=".verification.VerificationActivity"
-            android:exported="false" />
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="verify"
+                    android:scheme="indy" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".issue.IssueActivity"
             android:exported="true">
