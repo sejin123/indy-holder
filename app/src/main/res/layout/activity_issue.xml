@@ -4,12 +4,134 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".issue.IssueActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_margin="10dp"
         android:gravity="center"
-        android:text="issue credential" />
+        android:text="issue credential"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="#d09aff"
+            android:paddingHorizontal="5dp"
+            android:text="secret" />
+
+        <TextView
+            android:id="@+id/txt_issue_secret"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:paddingHorizontal="5dp"
+            android:text="get secret" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="#d09aff"
+            android:paddingHorizontal="5dp"
+            android:text="offer" />
+
+        <TextView
+            android:id="@+id/txt_issue_offer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:maxLines="10"
+            android:paddingHorizontal="5dp"
+            android:text="get offer" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="#d09aff"
+            android:paddingHorizontal="5dp"
+            android:text="credReq" />
+
+        <TextView
+            android:id="@+id/txt_issue_credReq"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:maxLines="10"
+            android:paddingHorizontal="5dp"
+            android:text="create credential request" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="#d09aff"
+            android:paddingHorizontal="5dp"
+            android:text="issue" />
+
+        <TextView
+            android:id="@+id/txt_issue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:maxLines="10"
+            android:paddingHorizontal="5dp"
+            android:text="issue payload" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="#d09aff"
+            android:paddingHorizontal="5dp"
+            android:text="cred id" />
+
+        <TextView
+            android:id="@+id/txt_issue_cred_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:maxLines="10"
+            android:paddingHorizontal="5dp"
+            android:text="credential id (referent)" />
+    </LinearLayout>
 </LinearLayout>

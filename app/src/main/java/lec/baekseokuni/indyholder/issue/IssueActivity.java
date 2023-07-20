@@ -1,9 +1,13 @@
 package lec.baekseokuni.indyholder.issue;
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
+import androidx.annotation.MainThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import kr.co.bdgen.indywrapper.data.argument.CredentialInfo;
@@ -30,6 +34,8 @@ public class IssueActivity extends AppCompatActivity {
         if (data == null)
             return;
         String secret = data.getQueryParameter("secret");
+        TextView txtIssueSecret = findViewById(R.id.txt_issue_secret);
+        txtIssueSecret.setText(secret);
         Log.d("[SUCCESS/DEEPLINK]", secret);
 
         //증명서 발급 과정: offer -> issue -> store
@@ -43,6 +49,10 @@ public class IssueActivity extends AppCompatActivity {
                 offerPayload -> {
                     //응답 성공 시
                     issueCredential(secret, offerPayload);
+                    runOnUiThread(() -> {
+                        TextView txtOffer = findViewById(R.id.txt_issue_offer);
+                        txtOffer.setText(offerPayload.toString());
+                    });
                     Log.d("[SUCCESS/OFFER]", "credDef = " + offerPayload.getCredDefJson() + "\n" + "offer = " + offerPayload.getCredOfferJson());
                     return null;
                 },
@@ -64,7 +74,22 @@ public class IssueActivity extends AppCompatActivity {
                 offerPayload,
                 (credentialInfo, issuePayload) -> {
                     //발급 성공 시
-                    storeCredential(credentialInfo, issuePayload);
+                    DialogInterface.OnClickListener onClickPositive = (dialog, which) -> {
+                        storeCredential(credentialInfo, issuePayload);
+                    };
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this)
+                            .setTitle("증명설 발급")
+                            .setCancelable(false)
+                            .setMessage("발급한 증명서를 저장하시겠습니까?")
+                            .setPositiveButton("증명서 저장", onClickPositive)
+                            .setNegativeButton("취소", null);
+                    runOnUiThread(() -> {
+                        TextView txtCredReq = findViewById(R.id.txt_issue_credReq);
+                        TextView txtIssue = findViewById(R.id.txt_issue);
+                        txtCredReq.setText(credentialInfo.toString());
+                        txtIssue.setText(issuePayload.toString());
+                        alert.create().show();
+                    });
                     Log.d("[SUCCESS/ISSUE]", "credReqMeta = " + credentialInfo.getCredReqMetadataJson() + "\n" + "credReq = " + credentialInfo.getCredReqJson() + "\n" + "credDef = " + credentialInfo.getCredDefJson() + "\n" + "cred = " + issuePayload.getCredentialJson());
                     return null;
                 },
@@ -84,6 +109,10 @@ public class IssueActivity extends AppCompatActivity {
                 issuePayload,
                 cred -> {
                     //저장 성공 시
+                    runOnUiThread(() -> {
+                        TextView txtCredId = findViewById(R.id.txt_cred_id);
+                        txtCredId.setText(cred);
+                    });
                     Log.i("[SUCCESS/STORE]", "credId(referent) = " + cred);
                     return null;
                 },

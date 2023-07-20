@@ -17,11 +17,8 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
 
     private final List<Credential> credentialList;
 
-    private final View.OnClickListener onNavCred = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    private final View.OnClickListener onNavCred = v -> {
 
-        }
     };
 
     public CredentialRecyclerViewAdapter(List<Credential> items) {
@@ -36,7 +33,11 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-
+        Credential credData = credentialList.get(position);
+        holder.itemView.setOnClickListener(onNavCred);
+        holder.txtCredId.setText(credData.getId());
+        holder.txtSchemaId.setText(credData.getSchemaId());
+        holder.txtCredDefId.setText(credData.getCredDefId());
     }
 
     @Override
