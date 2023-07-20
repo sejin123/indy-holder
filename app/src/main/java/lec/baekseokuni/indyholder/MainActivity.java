@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import lec.baekseokuni.indyholder.credential.CredentialListActivity;
 
 public class MainActivity extends AppCompatActivity {
     View.OnClickListener onStartDeeplink = v -> {
@@ -17,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
         finish();
     };
     View.OnClickListener onNavToCredList = v -> {
-
+        Intent intent = new Intent(getApplicationContext(), CredentialListActivity.class);
+        startActivity(intent);
     };
 
     @Override
@@ -25,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btnIssueTest = findViewById(R.id.btn_issue_test_cred);
+        Button btnNavToCredList = findViewById(R.id.btn_nav_to_cred_list);
         btnIssueTest.setOnClickListener(onStartDeeplink);
+        btnNavToCredList.setOnClickListener(onNavToCredList);
     }
 }

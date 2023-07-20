@@ -1,12 +1,16 @@
 package lec.baekseokuni.indyholder.issue;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +18,7 @@ import kr.co.bdgen.indywrapper.data.argument.CredentialInfo;
 import kr.co.bdgen.indywrapper.data.payload.IssuePayload;
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
 import kr.co.bdgen.indywrapper.repository.IssueRepository;
+import lec.baekseokuni.indyholder.MainActivity;
 import lec.baekseokuni.indyholder.MyApplication;
 import lec.baekseokuni.indyholder.R;
 
@@ -24,6 +29,11 @@ public class IssueActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_issue);
+        ActionBar appBar = getSupportActionBar();
+        if (appBar != null) {
+            appBar.setTitle("증명서 발급");
+            appBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         //deeplink 처리
         //deeplink = indy://holder?secret=blarblar
@@ -110,8 +120,9 @@ public class IssueActivity extends AppCompatActivity {
                 cred -> {
                     //저장 성공 시
                     runOnUiThread(() -> {
-                        TextView txtCredId = findViewById(R.id.txt_cred_id);
+                        TextView txtCredId = findViewById(R.id.txt_issue_cred_id);
                         txtCredId.setText(cred);
+                        navigateToMain();
                     });
                     Log.i("[SUCCESS/STORE]", "credId(referent) = " + cred);
                     return null;
@@ -122,5 +133,17 @@ public class IssueActivity extends AppCompatActivity {
                     return null;
                 }
         );
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        navigateToMain();
+        return super.onOptionsItemSelected(item);
     }
 }
