@@ -9,12 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import kr.co.bdgen.indywrapper.data.argument.CredentialInfo;
 import kr.co.bdgen.indywrapper.data.payload.IssuePayload;
 import kr.co.bdgen.indywrapper.data.payload.OfferPayload;
-import kr.co.bdgen.indywrapper.repository.IssuingRepository;
+import kr.co.bdgen.indywrapper.repository.IssueRepository;
 import lec.baekseokuni.indyholder.MyApplication;
 import lec.baekseokuni.indyholder.R;
 
 public class IssueActivity extends AppCompatActivity {
-    private final IssuingRepository repository = new IssuingRepository();
+    private final IssueRepository repository = new IssueRepository();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

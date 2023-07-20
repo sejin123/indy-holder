@@ -1,17 +1,17 @@
 package lec.baekseokuni.indyholder.credential;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import kr.co.bdgen.indywrapper.data.Credential;
-import lec.baekseokuni.indyholder.databinding.ItemCredentialBinding;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import kr.co.bdgen.indywrapper.data.Credential;
+import lec.baekseokuni.indyholder.databinding.ItemCredentialBinding;
 
 public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<CredentialRecyclerViewAdapter.ViewHolder> {
 
@@ -35,12 +35,8 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        Credential credData = credentialList.get(position);
-        holder.txtCredId.setText(credData.getId());
-        holder.txtSchemaId.setText(credData.getSchemaId());
-        holder.txtCredDefId.setText(credData.getCredDefId());
-        holder.itemView.setOnClickListener(onNavCred);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+
     }
 
     @Override
@@ -48,7 +44,7 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
         return credentialList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView txtCredId;
         public final TextView txtSchemaId;
         public final TextView txtCredDefId;
@@ -60,6 +56,7 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
             txtCredDefId = binding.txtCredDefId;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + txtCredId.getText() + "'";

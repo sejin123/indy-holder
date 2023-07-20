@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import kotlin.Pair;
 import lec.baekseokuni.indyholder.databinding.ItemAttributeBinding;
 
 public class AttributeRecyclerViewAdapter extends RecyclerView.Adapter<AttributeRecyclerViewAdapter.ViewHolder> {
-    private final List<Pair<String, String>> attrList = new ArrayList<>();
+    private final List<Map.Entry<String, String>> attrList;
 
     public AttributeRecyclerViewAdapter(Map<String, String> attributes) {
-        attributes.forEach((key, value) -> attrList.add(new Pair<>(key, value)));
+        attrList = new ArrayList<>(attributes.entrySet());
     }
 
     @NonNull
@@ -29,9 +30,7 @@ public class AttributeRecyclerViewAdapter extends RecyclerView.Adapter<Attribute
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Pair<String, String> nameAndValue = attrList.get(position);
-        holder.txtAttrName.setText(nameAndValue.getFirst());
-        holder.txtAttrValue.setText(nameAndValue.getSecond());
+
     }
 
     @Override
@@ -39,7 +38,7 @@ public class AttributeRecyclerViewAdapter extends RecyclerView.Adapter<Attribute
         return attrList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView txtAttrName;
         public final TextView txtAttrValue;
 
@@ -49,6 +48,7 @@ public class AttributeRecyclerViewAdapter extends RecyclerView.Adapter<Attribute
             txtAttrValue = binding.txtAttributeValue;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + txtAttrName.getText() + "'";

@@ -15,7 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class IssuingRepository() {
+class IssueRepository() {
     private val issuerApi: IssuerApi = RetrofitConfig.createApi(
         RetrofitConfig.issuerBaseUrl, IssuerApi::class.java
     )
