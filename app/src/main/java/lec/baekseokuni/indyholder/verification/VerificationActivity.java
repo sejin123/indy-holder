@@ -118,6 +118,8 @@ public class VerificationActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         binding.txtProofRequest.setText(proofRequestJson);
                     });
+
+                    // proof 에 전달될 증명서 선택
                     JSONObject requestedAttributesJo = new JSONObject();
                     List<CredentialSearchItem> credentialSearchItems = new ArrayList<>();
                     try {
@@ -176,7 +178,7 @@ public class VerificationActivity extends AppCompatActivity {
                         String credDefs = credDefsMap.toString();
                         String revocState = new JSONObject().toString();
 
-
+                        // proof 생성
                         String proofJson = Anoncreds.proverCreateProof(
                                 wallet,
                                 proofRequestJson,
@@ -189,6 +191,7 @@ public class VerificationActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             binding.txtProof.setText(proofJson);
                         });
+                        // 베리파이어에게 proof 전달
                         String revocRegDefs = new JSONObject().toString();
                         String revocRegs = new JSONObject().toString();
                         return execute(verifyApi.postVerifyProof(
