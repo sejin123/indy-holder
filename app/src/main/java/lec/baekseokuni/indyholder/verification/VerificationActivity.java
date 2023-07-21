@@ -1,11 +1,14 @@
 package lec.baekseokuni.indyholder.verification;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -14,14 +17,15 @@ import com.google.gson.reflect.TypeToken;
 
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds;
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq;
-import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import kr.co.bdgen.indywrapper.AppExecutors;
 import kr.co.bdgen.indywrapper.api.VerifyApi;
@@ -32,6 +36,7 @@ import kr.co.bdgen.indywrapper.data.argument.CredentialVerifyPostVerifyProofArgs
 import kr.co.bdgen.indywrapper.data.payload.ProofRequest;
 import kr.co.bdgen.indywrapper.data.payload.RequestedAttribute;
 import lec.baekseokuni.indyholder.MyApplication;
+import lec.baekseokuni.indyholder.R;
 import lec.baekseokuni.indyholder.databinding.ActivityVerificationBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +47,7 @@ public class VerificationActivity extends AppCompatActivity {
     private final VerifyApi verifyApi = RetrofitConfig.INSTANCE.createApi(RetrofitConfig.issuerBaseUrl, VerifyApi.class);
     private final static String ARGS_SCHEMA_ID = "ARGS_SCHEMA_ID";
     private ActivityVerificationBinding binding;
+    private List<RequestedAttributeSearchedItem> requestedAttributeSearchedItemList = new ArrayList<>();
 
     public static Intent createStartIntent(Context context, String schemaId) {
         return new Intent(context, VerificationActivity.class)
@@ -49,8 +55,8 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     private final Gson gson = new GsonBuilder()
-//            .setPrettyPrinting()
             .create();
+    private final VerificationRecyclerViewAdapter adapter = new VerificationRecyclerViewAdapter();
 
     private String schemaId;
 
@@ -63,29 +69,24 @@ public class VerificationActivity extends AppCompatActivity {
         binding = ActivityVerificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnRetry.setOnClickListener(v -> {
-            binding.txtProofRequest.setText(null);
-            binding.txtCredentials.setText(null);
-            binding.txtProof.setText(null);
-            binding.txtError.setText(null);
-            createProof(this.schemaId);
+        binding.btnSubmit.setOnClickListener(v -> {
+            verify();
         });
 
         Intent intent = getIntent();
         String schemaId;
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             schemaId = intent.getData().getQueryParameter("schemaId");
-            binding.txtEntry.setText("deeplink(" + intent.getData() + ")");
         } else {
             schemaId = intent.getStringExtra(ARGS_SCHEMA_ID);
-            binding.txtEntry.setText("intent(" + schemaId + ")");
         }
 
         this.schemaId = schemaId;
 
         if (savedInstanceState != null)
             return;
-        binding.btnRetry.callOnClick();
+        binding.listRequestedAttribute.setAdapter(adapter);
+        createProof(this.schemaId);
     }
 
     private void createProof(String schemaId) {
@@ -110,39 +111,75 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     private void onCreateProofSuccess(ProofRequest proofRequest) {
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.runAsync(() -> {
                     Wallet wallet = MyApplication.getWallet();
-                    String masterSecret = MyApplication.getMasterSecret(this);
 
                     String proofRequestJson = gson.toJson(proofRequest);
-                    runOnUiThread(() -> {
-                        binding.txtProofRequest.setText(proofRequestJson);
-                    });
 
                     // proof 에 전달될 증명서 선택
-                    JSONObject requestedAttributesJo = new JSONObject();
-                    List<CredentialSearchItem> credentialSearchItems = new ArrayList<>();
                     try {
                         CredentialsSearchForProofReq credentialsSearch = CredentialsSearchForProofReq
                                 .open(wallet, proofRequestJson, null)
                                 .join();
                         for (Map.Entry<String, RequestedAttribute> entry : proofRequest.getRequestedAttributes().entrySet()) {
                             String key = entry.getKey();
-
                             String join = credentialsSearch.fetchNextCredentials(key, 100).join();
                             List<CredentialSearchItem> list = gson.fromJson(join, new TypeToken<List<CredentialSearchItem>>() {
                             }.getType());
-                            credentialSearchItems.addAll(list);
-                            String credId = list.isEmpty() ? null : list.get(0).getCredential().getId();
-                            requestedAttributesJo.put(
-                                    key,
-                                    new JSONObject()
-                                            .put("cred_id", credId)
-                                            .put("revealed", credId != null)
+
+                            requestedAttributeSearchedItemList.add(
+                                    new RequestedAttributeSearchedItem(
+                                            key,
+                                            entry.getValue(),
+                                            list.stream()
+                                                    .map(CredentialSearchItem::getCredential)
+                                                    .collect(Collectors.toList())
+                                    )
                             );
                         }
                         credentialsSearch.close();
 
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .thenRunAsync(
+                        () -> {
+                            adapter.setItems(requestedAttributeSearchedItemList);
+                            binding.btnSubmit.setEnabled(true);
+                        },
+                        AppExecutors.getInstance().mainThread()
+                )
+                .exceptionally(e -> {
+                    runOnUiThread(() -> onError(e));
+                    return null;
+                });
+    }
+
+    private void verify() {
+        CompletableFuture.supplyAsync(() -> {
+                    Wallet wallet = MyApplication.getWallet();
+                    String masterSecret = MyApplication.getMasterSecret(this);
+                    // proof 에 전달될 증명서 선택
+                    try {
+
+                        JSONObject requestedAttributesJo = new JSONObject();
+                        List<String> schemaIds = new ArrayList<>();
+                        List<String> credDefIds = new ArrayList<>();
+                        for (RequestedAttributeSearchedItem item : requestedAttributeSearchedItemList) {
+                            Credential selectedCredential = item.getSelectedCredential();
+                            requestedAttributesJo.put(
+                                    item.getRequestedAttributeKey(),
+                                    new JSONObject()
+                                            .put("cred_id", selectedCredential != null ? selectedCredential.getId() : null)
+                                            .put("revealed", selectedCredential != null)
+                            );
+                            if (selectedCredential == null)
+                                continue;
+                            schemaIds.add(selectedCredential.getSchemaId());
+                            credDefIds.add(selectedCredential.getCredDefId());
+                        }
 
                         String credentialsJson = new JSONObject()
                                 .put("self_attested_attributes", new JSONObject())
@@ -150,18 +187,6 @@ public class VerificationActivity extends AppCompatActivity {
                                 .put("requested_predicates", new JSONObject())
                                 .toString();
 
-                        runOnUiThread(() -> {
-                            binding.txtCredentials.setText(credentialsJson);
-                        });
-
-
-                        List<String> schemaIds = new ArrayList<>();
-                        List<String> credDefIds = new ArrayList<>();
-                        for (CredentialSearchItem item : credentialSearchItems) {
-                            Credential credential = item.getCredential();
-                            schemaIds.add(credential.getSchemaId());
-                            credDefIds.add(credential.getCredDefId());
-                        }
                         Map<String, String> schemaIdToJsonMap = execute(verifyApi.getSchemaJson(schemaIds));
                         Map<String, String> credDefIdToJsonMap = execute(verifyApi.getDefinitionJson(credDefIds));
 
@@ -178,6 +203,7 @@ public class VerificationActivity extends AppCompatActivity {
                         String credDefs = credDefsMap.toString();
                         String revocState = new JSONObject().toString();
 
+                        String proofRequestJson = gson.toJson(proofRequest);
                         // proof 생성
                         String proofJson = Anoncreds.proverCreateProof(
                                 wallet,
@@ -188,9 +214,6 @@ public class VerificationActivity extends AppCompatActivity {
                                 credDefs,
                                 revocState
                         ).get();
-                        runOnUiThread(() -> {
-                            binding.txtProof.setText(proofJson);
-                        });
                         // 베리파이어에게 proof 전달
                         String revocRegDefs = new JSONObject().toString();
                         String revocRegs = new JSONObject().toString();
@@ -211,19 +234,30 @@ public class VerificationActivity extends AppCompatActivity {
                 .thenAcceptAsync(
                         result -> {
                             Toast.makeText(this, "제출 결과: " + result, Toast.LENGTH_SHORT).show();
+                            runOnUiThread(() -> {
+                                DialogInterface.OnClickListener onClickPositive = (dialog, which) -> {
+                                    finish();
+                                };
+                                AlertDialog.Builder alert = new AlertDialog.Builder(this)
+                                        .setTitle("증명설 제출 결과")
+                                        .setCancelable(false)
+                                        .setMessage("기관 검증 결과: " + result)
+                                        .setPositiveButton("확인", onClickPositive);
+                                alert.create().show();
+                            });
+
                         },
                         AppExecutors.getInstance().mainThread()
                 )
                 .exceptionally(e -> {
                     runOnUiThread(() -> onError(e));
                     return null;
-                })
-        ;
+                });
     }
 
     private void onError(Throwable e) {
         e.printStackTrace();
-        binding.txtError.setText(e.getMessage());
+        binding.btnSubmit.setEnabled(false);
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
