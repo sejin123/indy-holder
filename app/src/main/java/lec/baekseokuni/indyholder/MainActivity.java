@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import lec.baekseokuni.indyholder.credential.CredentialListActivity;
 
 public class MainActivity extends AppCompatActivity {
     View.OnClickListener onStartDeeplink = v -> {
-        String testDeeplink = "indy://holder?secret=test1";
+        String testDeeplink = "indy://holder?secret=QwvcRk3jtF";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(testDeeplink));
         startActivity(intent);
         finish();
