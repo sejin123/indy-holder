@@ -3,6 +3,7 @@ package lec.baekseokuni.indyholder.credential;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,7 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
         holder.binding.txtCredId.setText(name);
         holder.binding.txtCredDefId.setText(date);
         holder.binding.txtSchemaId.setText(crime);
+        holder.binding.clear.setVisibility(View.VISIBLE);
     }
 
     @Override
