@@ -4,25 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="104dp"
+        android:layout_marginTop="50dp"
+        android:layout_weight="0"
+        android:gravity="top|center_horizontal"
+        android:text="범죄이력 증명서"
+        android:textColor="@color/black"
+        android:textSize="34sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="408dp"
+        android:gravity="center_horizontal"
+        android:padding="30dp"
+        android:src="@drawable/fingerprint_150159_1280" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Hello, DID Holder!" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_issue_test_cred"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="테스트 증명서 발급" />
+        <Button
+            android:id="@+id/btn_issue_test_cred"
+            android:layout_width="170dp"
+            android:layout_height="90dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="#72888888"
+            android:text="테스트 증명서 발급" />
 
-    <Button
-        android:id="@+id/btn_nav_to_cred_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="증명서 목록 조회" />
+        <Button
+            android:id="@+id/btn_nav_to_cred_list"
+            android:layout_width="170dp"
+            android:layout_height="90dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="#72888888"
+            android:text="증명서 목록 조회" />
+    </LinearLayout>
 </LinearLayout>
