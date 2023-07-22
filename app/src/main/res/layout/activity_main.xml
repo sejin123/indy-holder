@@ -11,12 +11,17 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="303dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="50dp"
         android:layout_weight="1"
         android:gravity="top|center_horizontal"
         android:text="범죄이력 증명서"
-        android:textSize="34sp"
-        android:layout_marginTop="50dp"/>
+        android:textSize="34sp" />
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:gravity="center_horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
