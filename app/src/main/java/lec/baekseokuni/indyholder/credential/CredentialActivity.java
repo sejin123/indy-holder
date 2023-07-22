@@ -45,6 +45,7 @@ public class CredentialActivity extends AppCompatActivity {
         nameAndValueList.add(new Pair<>("범죄 날짜:", attrs.get("crime_date")));
 
 
+
         RecyclerView rvAttributes = findViewById(R.id.list_attribute);
         AttributeRecyclerViewAdapter adapter = new AttributeRecyclerViewAdapter(nameAndValueList);
         rvAttributes.setAdapter(adapter);
