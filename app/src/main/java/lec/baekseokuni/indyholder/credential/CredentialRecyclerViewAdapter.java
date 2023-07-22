@@ -50,7 +50,11 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
         holder.binding.txtCredId.setText(name);
         holder.binding.txtCredDefId.setText(date);
         holder.binding.txtSchemaId.setText(crime);
-        holder.binding.clear.setVisibility(View.VISIBLE);
+
+        if ("X".equals(crime)) {
+            holder.binding.clear.setVisibility(View.VISIBLE);
+        } else
+            holder.binding.clear.setVisibility(View.GONE);
     }
 
     @Override
