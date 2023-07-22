@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="#B437A81D"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -17,7 +17,7 @@
         android:layout_weight="0"
         android:gravity="top|center_horizontal"
         android:text="범죄이력 증명서"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="34sp" />
 
     <ImageView
@@ -35,18 +35,18 @@
 
         <Button
             android:id="@+id/btn_issue_test_cred"
-            android:layout_width="150dp"
+            android:layout_width="170dp"
             android:layout_height="90dp"
-            android:layout_margin="20dp"
-            android:backgroundTint="#0B6121"
+            android:layout_margin="10dp"
+            android:backgroundTint="#72888888"
             android:text="테스트 증명서 발급" />
 
         <Button
             android:id="@+id/btn_nav_to_cred_list"
-            android:layout_width="150dp"
+            android:layout_width="170dp"
             android:layout_height="90dp"
-            android:layout_margin="20dp"
-            android:backgroundTint="#0B6121"
+            android:layout_margin="10dp"
+            android:backgroundTint="#72888888"
             android:text="증명서 목록 조회" />
     </LinearLayout>
 </LinearLayout>
