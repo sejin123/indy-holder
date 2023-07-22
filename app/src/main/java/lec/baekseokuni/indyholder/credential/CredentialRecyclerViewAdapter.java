@@ -47,8 +47,8 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
         String crime = attrs.get("existence_of_crime");
 
         holder.binding.txtCredId.setText(name);
-        holder.binding.txtCredDefId.setText(crime);
-        holder.binding.txtSchemaId.setText(date);
+        holder.binding.txtCredDefId.setText(date);
+        holder.binding.txtSchemaId.setText(crime);
     }
 
     @Override
