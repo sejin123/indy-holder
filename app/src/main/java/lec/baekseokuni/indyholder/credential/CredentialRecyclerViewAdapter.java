@@ -3,25 +3,23 @@ package lec.baekseokuni.indyholder.credential;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import kr.co.bdgen.indywrapper.data.Credential;
 import lec.baekseokuni.indyholder.databinding.ItemCredentialBinding;
 
 public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<CredentialRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Credential> credentialList;
-
-    public CredentialRecyclerViewAdapter(List<Credential> items) {
-        credentialList = items;
-    }
+    private List<Credential> credentialList;
+    @Nullable
+    private Consumer<Credential> onDeleteCred;
 
     @NonNull
     @Override
@@ -37,9 +35,14 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
             intent.putExtra(CredentialActivity.INTENT_EXTRA_ARG_KEY_CRED, (Parcelable) credData);
             v.getContext().startActivity(intent);
         });
-        holder.txtCredId.setText(credData.getId());
-        holder.txtSchemaId.setText(credData.getSchemaId());
-        holder.txtCredDefId.setText(credData.getCredDefId());
+        holder.binding.btnDeleteCred.setOnClickListener(v -> {
+            if (onDeleteCred == null)
+                return;
+            onDeleteCred.accept(credData);
+        });
+        holder.binding.txtCredId.setText(credData.getId());
+        holder.binding.txtSchemaId.setText(credData.getSchemaId());
+        holder.binding.txtCredDefId.setText(credData.getCredDefId());
     }
 
     @Override
@@ -47,22 +50,22 @@ public class CredentialRecyclerViewAdapter extends RecyclerView.Adapter<Credenti
         return credentialList.size();
     }
 
+    public void setCredentialList(List<Credential> credentialList) {
+        this.credentialList = credentialList;
+        notifyDataSetChanged();
+    }
+
+    public void setOnDeleteCred(@Nullable Consumer<Credential> onDeleteCred) {
+        this.onDeleteCred = onDeleteCred;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView txtCredId;
-        public final TextView txtSchemaId;
-        public final TextView txtCredDefId;
+        public final ItemCredentialBinding binding;
 
         public ViewHolder(ItemCredentialBinding binding) {
             super(binding.getRoot());
-            txtCredId = binding.txtCredId;
-            txtSchemaId = binding.txtSchemaId;
-            txtCredDefId = binding.txtCredDefId;
-        }
+            this.binding = binding;
 
-        @NonNull
-        @Override
-        public String toString() {
-            return super.toString() + " '" + txtCredId.getText() + "'";
         }
     }
 }
