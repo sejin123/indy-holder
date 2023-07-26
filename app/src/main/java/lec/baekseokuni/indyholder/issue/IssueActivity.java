@@ -63,7 +63,8 @@ public class IssueActivity extends AppCompatActivity {
                         TextView txtOffer = findViewById(R.id.txt_issue_offer);
                         txtOffer.setText(offerPayload.toString());
                     });
-                    Log.d("[SUCCESS/OFFER]", "credDef = " + offerPayload.getCredDefJson() + "\n" + "offer = " + offerPayload.getCredOfferJson());
+                    Log.d("[SUCCESS/OFFER]", "credDef = " + offerPayload.getCredDefJson()
+                            + "\n" + "offer = " + offerPayload.getCredOfferJson());
                     return null;
                 },
                 error -> {
@@ -88,7 +89,7 @@ public class IssueActivity extends AppCompatActivity {
                         storeCredential(credentialInfo, issuePayload);
                     };
                     AlertDialog.Builder alert = new AlertDialog.Builder(this)
-                            .setTitle("증명설 발급")
+                            .setTitle("증명서 발급")
                             .setCancelable(false)
                             .setMessage("발급한 증명서를 저장하시겠습니까?")
                             .setPositiveButton("증명서 저장", onClickPositive)
@@ -100,7 +101,8 @@ public class IssueActivity extends AppCompatActivity {
                         txtIssue.setText(issuePayload.toString());
                         alert.create().show();
                     });
-                    Log.d("[SUCCESS/ISSUE]", "credReqMeta = " + credentialInfo.getCredReqMetadataJson() + "\n" + "credReq = " + credentialInfo.getCredReqJson() + "\n" + "credDef = " + credentialInfo.getCredDefJson() + "\n" + "cred = " + issuePayload.getCredentialJson());
+                    Log.d("[SUCCESS/ISSUE]", "credReqMeta = " + credentialInfo.getCredReqMetadataJson() + "\n" + "credReq = " + credentialInfo.getCredReqJson() +
+                            "\n" + "credDef = " + credentialInfo.getCredDefJson() + "\n" + "cred = " + issuePayload.getCredentialJson());
                     return null;
                 },
                 error -> {
